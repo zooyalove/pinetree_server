@@ -18,11 +18,24 @@ const Item = new Schema({
     required: true
   },
 
-  // 상품형태
+  // 상품형태(S: 단일상품, C: 복합상품)
   item_type: {
     type: String,
     enum: ["S", "C"],
     required: true
+  },
+
+  // 상품구성품 리스트
+  /**
+   * [{
+   *    id: asdfksa...sadfasdg,
+   *    cnt: 1,
+   *    price: 4000
+   * }, ...]
+   */
+  item_components: {
+    type: Array,
+    default: []
   },
 
   // 가격 리스트 (원가(cost), 도매가(wholesale))
