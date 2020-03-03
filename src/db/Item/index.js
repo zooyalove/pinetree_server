@@ -33,7 +33,7 @@ const Item = new Schema({
    *    price: 4000
    * }, ...]
    */
-  item_components: {
+  sub_items: {
     type: Array,
     default: []
   },
@@ -56,11 +56,14 @@ const Item = new Schema({
     default: []
   },
 
-  // 상세정보 (사이즈, 그외 정보)
-  description: {
-    sizing: String,
-    info: String
-  }
+  // 규격
+  standard: String,
+
+  // 단위
+  unit: String,
+
+  // 정보
+  description: String
 });
 
 module.exports = Mongoose.model("item", Item);
