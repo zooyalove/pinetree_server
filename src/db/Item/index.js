@@ -63,7 +63,12 @@ const Item = new Schema({
   unit: String,
 
   // 정보
-  description: String
+  description: String,
+
+  created_at: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = Mongoose.model("item", Item);

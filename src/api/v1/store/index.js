@@ -1,5 +1,5 @@
 const Router = require("koa-router");
-const account = require("./account.ctrl");
+const store = require("./store.ctrl");
 
 const router = new Router();
 

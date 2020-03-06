@@ -3,7 +3,7 @@ const { MongoPrimary } = require("lib/util");
 
 const Schema = Mongoose.Schema;
 
-const Account = new Schema({
+const Store = new Schema({
   _id: MongoPrimary,
 
   // 거래처명
@@ -32,6 +32,12 @@ const Account = new Schema({
     default: "A"
   },
 
+  // 전잔금
+  remainder: {
+    type: Number,
+    default: 0
+  },
+
   created_at: {
     type: Date,
     default: Date.now
@@ -43,4 +49,4 @@ const Account = new Schema({
   }
 });
 
-module.exports = Mongoose.model("account", Account);
+module.exports = Mongoose.model("store", Store);

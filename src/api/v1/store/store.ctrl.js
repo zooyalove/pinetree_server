@@ -1,4 +1,4 @@
-const Account = require("db/Account");
+const Store = require("db/Store");
 
 exports.register = function register(ctx) {};
 
