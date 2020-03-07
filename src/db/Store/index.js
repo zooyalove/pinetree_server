@@ -43,10 +43,7 @@ const Store = new Schema({
     default: Date.now
   },
 
-  updated_at: {
-    type: Date,
-    default: Date.now
-  }
+  updated_at: Date
 });
 
 module.exports = Mongoose.model("store", Store);

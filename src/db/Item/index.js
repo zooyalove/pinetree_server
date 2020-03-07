@@ -13,7 +13,7 @@ const Item = new Schema({
   },
 
   // 매입처
-  purchase_office: {
+  store_id: {
     type: String,
     required: true
   },
@@ -28,9 +28,9 @@ const Item = new Schema({
   // 상품구성품 리스트
   /**
    * [{
-   *    id: asdfksa...sadfasdg,
-   *    cnt: 1,
-   *    price: 4000
+   *    item_id: asdfksa...sadfasdg,
+   *    item_price: 4000,
+   *    item_cnt: 1
    * }, ...]
    */
   sub_items: {
@@ -42,11 +42,11 @@ const Item = new Schema({
   pricing: {
     cost: {
       type: Number,
-      min: 500
+      required: true
     },
     whole: {
       type: Number,
-      min: 500
+      required: true
     }
   },
 
@@ -68,7 +68,9 @@ const Item = new Schema({
   created_at: {
     type: Date,
     default: Date.now
-  }
+  },
+
+  updated_at: Date
 });
 
 module.exports = Mongoose.model("item", Item);
