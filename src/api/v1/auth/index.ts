@@ -1,4 +1,4 @@
-import Router from "@koa/router";
+import Router from "koa-router";
 import * as auth from "./auth.ctrl";
 
 const router = new Router();

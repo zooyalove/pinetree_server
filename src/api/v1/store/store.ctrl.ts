@@ -1,6 +1,6 @@
 import Store from "db/Store";
-import { Middleware } from "@koa/router";
+import { IMiddleware } from "koa-router";
 
-export const register: Middleware = ctx => {};
+export const register: IMiddleware = ctx => {};
 
-export const modify: Middleware = ctx => {};
+export const modify: IMiddleware = ctx => {};
