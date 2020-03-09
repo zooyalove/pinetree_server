@@ -1,5 +1,5 @@
-const Mongoose = require("mongoose");
-const { MongoPrimary } = require("lib/util");
+import Mongoose from "mongoose";
+import { MongoPrimary } from "lib/util";
 
 const Schema = Mongoose.Schema;
 
@@ -73,4 +73,4 @@ const Item = new Schema({
   updated_at: Date
 });
 
-module.exports = Mongoose.model("item", Item);
+export default Mongoose.model("item", Item);

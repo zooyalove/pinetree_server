@@ -1,7 +1,7 @@
-const Mongoose = require("mongoose");
-const bcryptjs = require("bcryptjs");
+import Mongoose from "mongoose";
+import bcryptjs from "bcryptjs";
 
-const { MongoPrimary } = require("lib/util");
+import { MongoPrimary } from "lib/util";
 
 const Schema = Mongoose.Schema;
 
@@ -65,4 +65,4 @@ Member.methods.validateHash = function(password) {
   return bcryptjs.compareSync(password, this.hashed_password);
 };
 
-module.exports = Mongoose.model("member", Member);
+export default Mongoose.model("member", Member);

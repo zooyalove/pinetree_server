@@ -1,5 +1,5 @@
-const Router = require("koa-router");
-const v1 = require("./v1");
+import Router from "koa-router";
+import v1 from "./v1";
 
 const router = new Router();
 
@@ -9,4 +9,4 @@ const api = new Router();
 
 api.use("/api", router.routes());
 
-module.exports = api;
+export default api;

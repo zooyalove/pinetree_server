@@ -1,8 +1,8 @@
-const Mongoose = require("mongoose");
+import Mongoose from "mongoose";
 
 const { DATABASE } = process.env;
 
-module.exports = (function() {
+export default (function() {
   Mongoose.Promise = global.Promise;
 
   return {
