@@ -8,7 +8,7 @@ import morgan from "koa-morgan";
 const { PORT, SECRET_KEY } = process.env;
 
 import api from "./api";
-import ws from "./ws";
+import ws from "./api/ws";
 
 const app = websockify(new Koa());
 
@@ -24,7 +24,7 @@ app.use(bodyParser({ multipart: true }));
 app.use(api.routes());
 
 app.ws.use(sessionStore);
-app.ws.use(ws.routes()).use(ws.allowedMethods());
+app.ws.use(ws);
 
 app.listen(parseInt(PORT, 10), () => {
   console.log("Server is listening at", PORT);
