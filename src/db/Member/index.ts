@@ -1,13 +1,11 @@
-import Mongoose from "mongoose";
+import { Document, Schema, model, Model } from "mongoose";
 import bcryptjs from "bcryptjs";
 
 import { MongoPrimary } from "lib/util";
 
-const Schema = Mongoose.Schema;
-
 const salt = bcryptjs.genSaltSync();
 
-const Member = new Schema({
+const MemberSchema = new Schema({
   _id: MongoPrimary,
 
   email: {
@@ -18,7 +16,7 @@ const Member = new Schema({
     index: true
   },
 
-  hashed_password: {
+  password: {
     type: String,
     required: true
   },
@@ -48,21 +46,27 @@ const Member = new Schema({
   updated_at: Date
 });
 
-Member.virtual("password")
-  .set(function(password) {
-    this._password = password;
-    this.hashed_password = this.generateHash(password);
-  })
-  .get(function() {
-    return this._password;
-  });
+interface IMemberSchema extends Document {
+  email: string;
+  password: string;
+  nickname?: string;
+  verified: boolean;
+  verify_code?: string;
+  is_admin: boolean;
+}
 
-Member.methods.generateHash = function(password) {
-  return bcryptjs.hashSync(password, salt);
-};
-
-Member.methods.validateHash = function(password) {
+MemberSchema.methods.validateHash = function(password: string) {
   return bcryptjs.compareSync(password, this.hashed_password);
 };
 
-export default Mongoose.model("member", Member);
+export interface IMemeber extends IMemberSchema {
+  validateHash(password: string): boolean;
+}
+
+MemberSchema.pre<IMemeber>("save", function(next) {
+  if (this.isModified("password")) {
+    this.password = bcryptjs.hashSync(this.password, salt);
+  }
+});
+
+export default model<IMemeber>("member", MemberSchema);
