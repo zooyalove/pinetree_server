@@ -56,17 +56,17 @@ interface IMemberSchema extends Document {
 }
 
 MemberSchema.methods.validateHash = function(password: string) {
-  return bcryptjs.compareSync(password, this.hashed_password);
+  return bcryptjs.compareSync(password, this.password);
 };
 
-export interface IMemeber extends IMemberSchema {
+export interface IMember extends IMemberSchema {
   validateHash(password: string): boolean;
 }
 
-MemberSchema.pre<IMemeber>("save", function(next) {
+MemberSchema.pre<IMember>("save", function(next) {
   if (this.isModified("password")) {
     this.password = bcryptjs.hashSync(this.password, salt);
   }
 });
 
-export default model<IMemeber>("member", MemberSchema);
+export default model<IMember>("member", MemberSchema);
