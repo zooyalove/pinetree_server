@@ -20,6 +20,7 @@
     "@types/mongoose": "^5.7.3",
     "@types/nanoid": "^2.1.0",
     "@types/node": "^13.9.0",
+    "@types/sendmail": "^1.4.2",
     "bcryptjs": "^2.4.3",
     "cross-env": "^7.0.0",
     "dotenv": "^8.2.0",
@@ -31,7 +32,8 @@
     "koa-session": "^5.13.1",
     "koa-websocket": "^6.0.0",
     "mongoose": "^5.8.11",
-    "nanoid": "^2.1.11"
+    "nanoid": "^2.1.11",
+    "sendmail": "^1.6.1"
   },
   "devDependencies": {
     "ts-node": "^8.6.2",
