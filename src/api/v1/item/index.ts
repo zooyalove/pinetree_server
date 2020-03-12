@@ -3,8 +3,8 @@ import * as item from "./item.ctrl";
 
 const router = new Router();
 
-router.post("/register", item.register);
-router.put("/modify", item.modify);
-router.delete("/delete", item.item_delete);
+router.post("/", item.addItem);
+router.put("/:id", item.modifyItem);
+router.delete("/:id", item.deleteItem);
 
 export default router;
