@@ -1,7 +1,5 @@
-import Mongoose from "mongoose";
+import { Schema, model, Model, Document } from "mongoose";
 import { MongoPrimary } from "lib/util";
-
-const Schema = Mongoose.Schema;
 
 const Item = new Schema({
   _id: MongoPrimary,
@@ -73,4 +71,17 @@ const Item = new Schema({
   updated_at: Date
 });
 
-export default Mongoose.model("item", Item);
+enum ItemType {
+  Single = "S",
+  Complex = "C"
+}
+
+interface IItemSchema extends Document {
+  name: string;
+  store_id: string;
+  item_type: ItemType;
+}
+
+export interface IItem extends IItemSchema {}
+
+export default model<IItem>("item", Item);
