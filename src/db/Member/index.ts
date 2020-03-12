@@ -30,6 +30,7 @@ const MemberSchema = new Schema({
 
   verify_code: {
     type: String,
+    required: true,
     unique: true
   },
 
@@ -51,8 +52,10 @@ interface IMemberSchema extends Document {
   password: string;
   nickname?: string;
   verified: boolean;
-  verify_code?: string;
+  verify_code: string;
   is_admin: boolean;
+  created_at: Date;
+  updated_at: Date;
 }
 
 MemberSchema.methods.validateHash = function(password: string) {
