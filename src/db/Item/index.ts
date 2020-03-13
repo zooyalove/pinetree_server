@@ -23,18 +23,15 @@ const Item = new Schema({
     required: true
   },
 
-  // 상품구성품 리스트
   /**
+   * 상품구성품 리스트
    * [{
    *    item_id: asdfksa...sadfasdg,
    *    item_price: 4000,
    *    item_cnt: 1
    * }, ...]
    */
-  sub_items: {
-    type: Array,
-    default: []
-  },
+  sub_items: [Schema.Types.Mixed],
 
   // 가격 리스트 (원가(cost), 도매가(wholesale))
   pricing: {
@@ -49,10 +46,7 @@ const Item = new Schema({
   },
 
   // 이미지 리스트
-  images: {
-    type: Array,
-    default: []
-  },
+  images: [String],
 
   // 규격
   standard: String,
@@ -76,10 +70,23 @@ enum ItemType {
   Complex = "C"
 }
 
+export type SubItemType = {
+  item_id: string;
+  item_price: number;
+  item_cnt: number;
+};
+
 interface IItemSchema extends Document {
   name: string;
   store_id: string;
   item_type: ItemType;
+  sub_items?: SubItemType[];
+  images?: string[];
+  standard?: string;
+  unit?: string;
+  description?: string;
+  created_at: Date;
+  updated_at?: Date;
 }
 
 export interface IItem extends IItemSchema {}
