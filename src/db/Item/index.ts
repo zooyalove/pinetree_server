@@ -1,5 +1,6 @@
 import { Schema, model, Model, Document } from "mongoose";
 import { MongoPrimary } from "lib/util";
+import Store, { IStore } from "db/Store";
 
 const Item = new Schema({
   _id: MongoPrimary,
@@ -7,7 +8,8 @@ const Item = new Schema({
   // 상품명
   name: {
     type: String,
-    required: true
+    required: true,
+    index: true
   },
 
   // 매입처
@@ -78,7 +80,6 @@ export type SubItemType = {
 
 interface IItemSchema extends Document {
   name: string;
-  store_id: string;
   item_type: ItemType;
   sub_items?: SubItemType[];
   images?: string[];
@@ -89,6 +90,26 @@ interface IItemSchema extends Document {
   updated_at?: Date;
 }
 
-export interface IItem extends IItemSchema {}
+Item.methods.getSubItemCount = function(): number {
+  return this.sub_items ? this.sub_items.count() : 0;
+};
+
+Item.methods.getStoreInfo = async function(): Promise<any> {
+  const store = await Store.findOne({ _id: this._id }, { _id: 0, name: 1, local: 1 });
+
+  if (store) {
+    return {
+      name: store.name,
+      local: store.local
+    };
+  }
+  return null;
+};
+
+export interface IItem extends IItemSchema {
+  store_id: IStore["_id"];
+  getSubItemCount(): number;
+  getStoreInfo(): Promise<any>;
+}
 
 export default model<IItem>("item", Item);
