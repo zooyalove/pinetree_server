@@ -1,7 +1,5 @@
-import Mongoose from "mongoose";
+import { Schema, model, Document, Model } from "mongoose";
 import { MongoPrimary } from "lib/util";
-
-const Schema = Mongoose.Schema;
 
 const Store = new Schema({
   _id: MongoPrimary,
@@ -25,10 +23,10 @@ const Store = new Schema({
   // 연락처
   telephone: String,
 
-  // 협력업체 형태 ( C: 농장, A: 소매점, S: 셀프제작)
+  // 협력업체 형태 ( C: 농장, A: 소매점)
   corp_type: {
     type: String,
-    enum: ["C", "A", "S"],
+    enum: ["C", "A"],
     default: "A"
   },
 
@@ -46,4 +44,17 @@ const Store = new Schema({
   updated_at: Date
 });
 
-export default Mongoose.model("store", Store);
+interface IStoreSchema extends Document {
+  name: string;
+  local: string;
+  ceo_name?: string;
+  telephone?: string;
+  corp_type: string;
+  remainder: number;
+  created_at: Date;
+  updated_at?: Date;
+}
+
+export interface IStore extends IStoreSchema {}
+
+export default model<IStore>("store", Store);
