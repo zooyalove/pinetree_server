@@ -82,6 +82,10 @@ interface IItemSchema extends Document {
   name: string;
   item_type: ItemType;
   sub_items?: SubItemType[];
+  pricing: {
+    cost: number;
+    whole: number;
+  };
   images?: string[];
   standard?: string;
   unit?: string;
@@ -106,10 +110,15 @@ Item.methods.getStoreInfo = async function(): Promise<any> {
   return null;
 };
 
+Item.methods.getMargin = function(): number {
+  return this.pricing.whole - this.pricing.cost;
+};
+
 export interface IItem extends IItemSchema {
   store_id: IStore["_id"];
   getSubItemCount(): number;
   getStoreInfo(): Promise<any>;
+  getMargin(): number;
 }
 
 export default model<IItem>("item", Item);
