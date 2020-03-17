@@ -1,6 +1,6 @@
 import { Schema, model, Model, Document } from "mongoose";
-import { MongoPrimary } from "lib/util";
-import Store, { IStore } from "db/Store";
+import { MongoPrimary } from "../../lib/util";
+import Store, { IStore } from "../Store";
 
 const Item = new Schema({
   _id: MongoPrimary,

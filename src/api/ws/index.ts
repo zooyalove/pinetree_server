@@ -1,6 +1,6 @@
 import ws from "koa-route";
 import nanoid from "nanoid";
-import DBNotify from "lib/dbNotify";
+import DBNotify from "../../lib/dbNotify";
 
 export default ws.all("/ws", ctx => {
   // ctx.websocket.id = nanoid();

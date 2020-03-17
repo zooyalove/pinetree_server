@@ -1,4 +1,4 @@
-import Item from "db/Item";
+import Item from "../../../db/Item";
 import { IMiddleware } from "koa-router";
 
 /**

@@ -1,11 +1,11 @@
 import { Document, Schema, model, Model } from "mongoose";
 import bcryptjs from "bcryptjs";
 
-import { MongoPrimary } from "lib/util";
+import { MongoPrimary } from "../../lib/util";
 
-const salt = bcryptjs.genSaltSync();
+const { HASH_SALT: salt } = process.env;
 
-const MemberSchema = new Schema({
+const Member = new Schema({
   _id: MongoPrimary,
 
   email: {
@@ -21,7 +21,10 @@ const MemberSchema = new Schema({
     required: true
   },
 
-  nickname: String,
+  nickname: {
+    type: String,
+    required: true
+  },
 
   verified: {
     type: Boolean,
@@ -33,6 +36,8 @@ const MemberSchema = new Schema({
     required: true,
     unique: true
   },
+
+  profile_image: String,
 
   is_admin: {
     type: Boolean,
@@ -50,15 +55,16 @@ const MemberSchema = new Schema({
 interface IMemberSchema extends Document {
   email: string;
   password: string;
-  nickname?: string;
+  nickname: string;
   verified: boolean;
   verify_code: string;
+  profile_image?: string;
   is_admin: boolean;
   created_at: Date;
   updated_at: Date;
 }
 
-MemberSchema.methods.validateHash = function(password: string) {
+Member.methods.validateHash = function(password: string) {
   return bcryptjs.compareSync(password, this.password);
 };
 
@@ -66,10 +72,14 @@ export interface IMember extends IMemberSchema {
   validateHash(password: string): boolean;
 }
 
-MemberSchema.pre<IMember>("save", function(next) {
+Member.pre<IMember>("save", function(next) {
   if (this.isModified("password")) {
     this.password = bcryptjs.hashSync(this.password, salt);
   }
+
+  if (!this.updated_at) {
+    this.updated_at = new Date();
+  }
 });
 
-export default model<IMember>("member", MemberSchema);
+export default model<IMember>("member", Member);

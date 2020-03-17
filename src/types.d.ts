@@ -3,5 +3,6 @@ declare namespace NodeJS {
     PORT: string;
     DATABASE: string;
     SECRET_KEY: string;
+    HASH_SALT: string;
   }
 }

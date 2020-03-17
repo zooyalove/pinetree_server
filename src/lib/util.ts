@@ -5,9 +5,7 @@ import sendMailFactory from "sendmail";
 
 export const MongoPrimary = {
   type: String,
-  default: () => nanoid(10),
-  unique: true,
-  index: true
+  default: () => nanoid(10)
 };
 
 export const setCookieToken = (ctx: ParameterizedContext, token: string) => {

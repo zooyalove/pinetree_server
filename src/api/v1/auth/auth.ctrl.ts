@@ -1,7 +1,7 @@
-import Member from "db/Member";
+import Member from "../../../db/Member";
 import { IMiddleware } from "koa-router";
-import DBNotify from "lib/dbNotify";
-import { setCookieToken, generateToken, sendAuthMail } from "lib/util";
+import DBNotify from "../../../lib/dbNotify";
+import { setCookieToken, generateToken, sendAuthMail } from "../../../lib/util";
 import nanoid from "nanoid";
 
 /** 로그인 루틴
@@ -10,7 +10,7 @@ import nanoid from "nanoid";
 export const signIn: IMiddleware = async ctx => {
   let token: string | undefined = ctx.cookies.get("token");
 
-  if (token) {
+  if (token || ctx.state.user_id) {
     ctx.body = {
       name: "ALREADY_SIGNIN"
     };
@@ -31,7 +31,7 @@ export const signIn: IMiddleware = async ctx => {
     ctx.body = {
       name: "NOT_EXISTS_USERINFO"
     };
-    ctx.status = 400;
+    ctx.status = 401;
     return;
   }
 
@@ -39,19 +39,26 @@ export const signIn: IMiddleware = async ctx => {
     ctx.body = {
       name: "NOT_EQUAL_PASSWORD"
     };
-    ctx.status = 400;
+    ctx.status = 401;
     return;
   }
 
   token = generateToken();
 
   setCookieToken(ctx, token);
+  ctx.state.user_id = member.id;
+
+  ctx.body = {
+    nickname: member.nickname,
+    verified: member.verified
+  };
 };
 
 /** 로그아웃 루틴
  * POST /api/v1/auth/signout
  */
 export const signOut: IMiddleware = ctx => {
+  ctx.state.user_id = null;
   ctx.cookies.set("token", "");
 };
 
@@ -85,12 +92,12 @@ export const register: IMiddleware = async ctx => {
     nickname,
     verify_code
   });
-  member.updated_at = member.created_at;
 
   await member.save();
 
   sendAuthMail({ to: email, verify_code });
 
+  ctx.status = 201;
   ctx.body = {
     email,
     nickname
@@ -100,10 +107,40 @@ export const register: IMiddleware = async ctx => {
 /** 이메일로 부여된 코드 검증
  * POST /api/v1/auth/verify
  */
-export const verifyCode: IMiddleware = ctx => {
+export const verifyCode: IMiddleware = async ctx => {
   type RequestBody = {
     verify_code: string;
   };
 
+  const { user_id } = ctx.state;
   const { verify_code }: RequestBody = ctx.request.body;
+
+  const member = await Member.findOne({
+    email: user_id,
+    verify_code
+  });
+
+  if (!member) {
+    ctx.body = {
+      name: "NOT_EXISTS_USERINFO"
+    };
+    ctx.status = 401;
+    return;
+  }
+
+  if (member.verified) {
+    ctx.body = {
+      name: "ALREADY_VERIFIED"
+    };
+    ctx.status = 400;
+    return;
+  }
+
+  member.verified = true;
+  await member.save();
+
+  ctx.body = {
+    name: "SUCCESS"
+  };
+  ctx.status = 200;
 };

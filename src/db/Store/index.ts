@@ -1,5 +1,5 @@
 import { Schema, model, Document, Model } from "mongoose";
-import { MongoPrimary } from "lib/util";
+import { MongoPrimary } from "../../lib/util";
 
 const Store = new Schema({
   _id: MongoPrimary,
@@ -31,10 +31,7 @@ const Store = new Schema({
   },
 
   // 전잔금
-  remainder: {
-    type: Number,
-    default: 0
-  },
+  remainder: [Schema.Types.Mixed],
 
   created_at: {
     type: Date,
@@ -44,17 +41,26 @@ const Store = new Schema({
   updated_at: Date
 });
 
+export type RemainderType = {
+  year: number;
+  remain_money: number;
+};
+
 interface IStoreSchema extends Document {
   name: string;
   local: string;
   ceo_name?: string;
   telephone?: string;
   corp_type: string;
-  remainder: number;
+  remainder: RemainderType[];
   created_at: Date;
   updated_at?: Date;
 }
 
 export interface IStore extends IStoreSchema {}
+
+Store.pre<IStore>("save", function(next) {
+  if (!this.updated_at) this.updated_at = new Date();
+});
 
 export default model<IStore>("store", Store);

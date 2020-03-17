@@ -1,6 +1,6 @@
 import { Schema, model, Document, Model } from "mongoose";
-import { MongoPrimary } from "lib/util";
-import Store from "db/Store";
+import { MongoPrimary } from "../../lib/util";
+import Store, { IStore } from "../Store";
 
 const Sale = new Schema({
   _id: MongoPrimary,
@@ -59,7 +59,6 @@ type SellListType = {
 };
 
 interface ISaleSchema extends Document {
-  store_id: string;
   sell_list?: SellListType[];
   extra_charge: number;
   discount: number;
@@ -72,24 +71,32 @@ interface ISaleSchema extends Document {
   selled_at: Date;
 }
 
-export interface ISale extends ISaleSchema {}
+export interface ISale extends ISaleSchema {
+  store_id: IStore["_id"];
+}
 
 /**
  * 특정 거래처와 총 거래한 건수
  */
-Sale.statics.getTotalTransactionCountByStoreId = async function(storeId: string): Promise<number> {
+Sale.statics.getTotalCountByStoreId = async function(storeId: string): Promise<number> {
   return await this.find({ store_id: storeId }).count();
 };
 
 /**
  * 마지막 거래에 대한 정보
  */
-Sale.statics.getLastTransactionByStoreId = async function(storeId: string): Promise<any> {
-  await this.findOne({ store_id: storeId });
+Sale.statics.getLastTransactionByStoreId = async function(storeId: string): Promise<string | null> {
+  const lastDate = await this.findOne({ store_id: storeId }, { _id: 0, selled_at: 1 }).sort({
+    selled_at: -1
+  });
+
+  if (lastDate) return lastDate.selled_at;
+  return null;
 };
 
 export interface ISaleModel extends Model<ISale> {
-  getTotalTransactionCountByStoreId(storeId: string): Promise<number>;
+  getTotalCountByStoreId(storeId: string): Promise<number>;
+  getLastTransactionByStoreId(storeId: string): Promise<string | null>;
 }
 
 export default model<ISale, ISaleModel>("sale", Sale);
