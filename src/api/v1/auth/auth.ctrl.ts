@@ -25,6 +25,14 @@ export const signIn: IMiddleware = async ctx => {
 
   const { email, password }: RequestBody = ctx.request.body;
 
+  if (!email || !password) {
+    ctx.body = {
+      name: "INVALID_REQUEST"
+    };
+    ctx.status = 400;
+    return;
+  }
+
   const member = await Member.findOne({ email });
 
   if (!member) {
