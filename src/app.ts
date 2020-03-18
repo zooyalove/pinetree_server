@@ -9,6 +9,7 @@ const { PORT, SECRET_KEY } = process.env;
 
 import api from "./api";
 import ws from "./api/ws";
+import { isAuth } from "./middleware/auth";
 
 const app = websockify(new Koa());
 
@@ -18,6 +19,8 @@ const sessionStore = session(app);
 app.use(sessionStore);
 
 app.use(morgan("dev"));
+
+app.use(isAuth);
 
 app.use(bodyParser({ multipart: true }));
 
