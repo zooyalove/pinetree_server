@@ -7,11 +7,12 @@ const Store = new Schema({
   // 거래처명
   name: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
 
   // 지역 카테고리
-  local: {
+  localname: {
     type: String,
     enum: ["구미", "경주", "김천", "상주/문경", "안동/의성", "기타"],
     required: true
@@ -48,7 +49,7 @@ export type RemainderType = {
 
 interface IStoreSchema extends Document {
   name: string;
-  local: string;
+  localname: string;
   ceo_name?: string;
   telephone?: string;
   corp_type: string;
@@ -60,7 +61,7 @@ interface IStoreSchema extends Document {
 export interface IStore extends IStoreSchema {}
 
 Store.pre<IStore>("save", function(next) {
-  if (!this.updated_at) this.updated_at = new Date();
+  this.updated_at = new Date();
 });
 
 export default model<IStore>("store", Store);
