@@ -1,11 +1,12 @@
 import Router from "koa-router";
 import * as item from "./item.ctrl";
-import { isAuth } from "../middleware/auth";
+// import { isAuth } from "../middleware/auth";
 
 const router = new Router();
 
-router.post("/", isAuth, item.addItem);
-router.put("/:id", isAuth, item.modifyItem);
-router.delete("/:id", isAuth, item.deleteItem);
+router.get("/", item.getItemsAll);
+router.post("/", item.addItem);
+router.put("/:id", item.modifyItem);
+router.delete("/:id", item.deleteItem);
 
 export default router;

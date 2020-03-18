@@ -13,11 +13,11 @@ export const getItemsAll: IMiddleware = ctx => {};
  */
 export const getItemById: IMiddleware = async ctx => {
   const id = ctx.params.id;
-  const item = await Item.findOne({ _id: id });
+  const item = await Item.findById(id);
 
   if (!item) {
     ctx.body = {
-      name: "NOT_EXISTS_ITEM"
+      name: "NOT_EXISTS"
     };
     ctx.status = 400;
     return;
@@ -52,22 +52,16 @@ export const addItem: IMiddleware = async ctx => {
 
 /**
  * 상품수정
- * PUT /api/v1/item/
+ * PUT /api/v1/item/:id
  */
 export const modifyItem: IMiddleware = ctx => {
-  type RequestBody = {
-    id: string;
-  };
-  const { id } = ctx.request.body as RequestBody;
+  const id = ctx.params.id;
 };
 
 /**
  * 상품삭제
- * DELETE /api/v1/item/
+ * DELETE /api/v1/item/:id
  */
 export const deleteItem: IMiddleware = ctx => {
-  type RequestBody = {
-    id: string;
-  };
-  const { id } = ctx.request.body as RequestBody;
+  const id = ctx.params.id;
 };
