@@ -143,14 +143,6 @@
     "@types/koa" "*"
     "@types/morgan" "*"
 
-"@types/koa-route@^3.2.4":
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/@types/koa-route/-/koa-route-3.2.4.tgz#65fe3308f00bb33c5d0d95a79b441c30a6b1c989"
-  integrity sha512-jB4I4/HppiHiSFMqQvMC2Px5Zm8CExA7Bw7xW+o60xh4v0LrNTfKV7LMCGuJNRuUuTTiRcJvF1rbq5mINgQ1UQ==
-  dependencies:
-    "@types/koa" "*"
-    path-to-regexp "^1.7.0"
-
 "@types/koa-router@^7.4.0":
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/@types/koa-router/-/koa-router-7.4.0.tgz#4a5f48ca4432281f7429faedd9510c20945939dc"
@@ -165,15 +157,6 @@
   dependencies:
     "@types/cookies" "*"
     "@types/koa" "*"
-
-"@types/koa-websocket@^5.0.4":
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/@types/koa-websocket/-/koa-websocket-5.0.4.tgz#ce88d791c33b2a4356da4cfa1bbc4cd5db9de38a"
-  integrity sha512-0A+uuVom/qx1k4LRc1CGbhiZEr3OZPXK8WuSZcEu5qvxMhBti2yxUQuS5eJRSo1y98AGUJjrOKj/hcPBLsqtgg==
-  dependencies:
-    "@types/koa" "*"
-    "@types/koa-compose" "*"
-    "@types/ws" "*"
 
 "@types/koa@*", "@types/koa@^2.11.2":
   version "2.11.2"
@@ -262,10 +245,10 @@
   resolved "https://registry.yarnpkg.com/@types/strip-json-comments/-/strip-json-comments-0.0.30.tgz#9aa30c04db212a9a0649d6ae6fd50accc40748a1"
   integrity sha512-7NQmHra/JILCd1QqpSzl8+mJRc8ZHz3uDm8YV1Ks9IhK0epEiTw8aIErbvH9PI+6XbqhyIQy3462nEsn7UVzjQ==
 
-"@types/ws@*":
-  version "7.2.2"
-  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-7.2.2.tgz#1bd2038bc80aea60f8a20b2dcf08602a72e65063"
-  integrity sha512-oqnI3DbGCVI9zJ/WHdFo3CUE8jQ8CVQDUIKaDtlTcNeT4zs6UCg9Gvk5QrFx2QPkRszpM6yc8o0p4aGjCsTi+w==
+"@types/ws@^7.2.3":
+  version "7.2.3"
+  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-7.2.3.tgz#a3add56077ac6cc9396b9502c7252a1635922032"
+  integrity sha512-VT/GK7nvDA7lfHy40G3LKM+ICqmdIsBLBHGXcWD97MtqQEjNMX+7Gudo8YGpaSlYdTX7IFThhCE8Jx09HegymQ==
   dependencies:
     "@types/node" "*"
 
@@ -957,7 +940,7 @@ co-body@^5.1.1:
     raw-body "^2.2.0"
     type-is "^1.6.14"
 
-co@^4.4.0, co@^4.6.0:
+co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
   integrity sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ=
@@ -1202,13 +1185,6 @@ debounce@^1.0.0:
   resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.0.tgz#44a540abc0ea9943018dc0eaa95cce87f65cd131"
   integrity sha512-mYtLl1xfZLi1m4RtQYlZgJUNQjl4ZxVnHzIR8nLLgi4q1YT8o/WM+MK/f8yfcc9s5Ir5zRaPZyZU6xs1Syoocg==
 
-debug@*, debug@^4.0.1, debug@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
-  integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
-  dependencies:
-    ms "^2.1.1"
-
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -1227,6 +1203,13 @@ debug@^3.1.0:
   version "3.2.6"
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.6.tgz#e83d17de16d8a7efb7717edbe5fb10135eee629b"
   integrity sha512-mel+jf7nrtEl5Pn1Qx46zARXKDpBbvzezse7p7LqINmdoIk8PYP5SySaxEmYv6TZ0JyEKA1hsCId6DIhgITtWQ==
+  dependencies:
+    ms "^2.1.1"
+
+debug@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
+  integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
   dependencies:
     ms "^2.1.1"
 
@@ -2353,15 +2336,6 @@ koa-morgan@^1.0.1:
   dependencies:
     morgan "^1.6.1"
 
-koa-route@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/koa-route/-/koa-route-3.2.0.tgz#76298b99a6bcfa9e38cab6fe5c79a8733e758bce"
-  integrity sha1-dimLmaa8+p44yrb+XHmocz51i84=
-  dependencies:
-    debug "*"
-    methods "~1.1.0"
-    path-to-regexp "^1.2.0"
-
 koa-router@^8.0.8:
   version "8.0.8"
   resolved "https://registry.yarnpkg.com/koa-router/-/koa-router-8.0.8.tgz#f0b70f90dae275db8c71a41e1efb625581fb3b5a"
@@ -2383,16 +2357,6 @@ koa-session@^5.13.1:
     debug "^3.1.0"
     is-type-of "^1.0.0"
     uuid "^3.3.2"
-
-koa-websocket@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/koa-websocket/-/koa-websocket-6.0.0.tgz#7fb7698a7004c07aac663b15e84bf4bc99901352"
-  integrity sha512-pGTaB+aXILD/q+bQNh+Ejrg8zSxf6QRpiUQoh2TFQSmUZo2hrt6KGk4qlyxfHxFH40bVtyKeo4x1u0kKgJDOWA==
-  dependencies:
-    co "^4.4.0"
-    debug "^4.0.1"
-    koa-compose "^4.1.0"
-    ws "^7.0.1"
 
 koa@^2.11.0:
   version "2.11.0"
@@ -2626,7 +2590,7 @@ meow@^3.3.0:
     redent "^1.0.0"
     trim-newlines "^1.0.0"
 
-methods@^1.1.2, methods@~1.1.0:
+methods@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
   integrity sha1-VSmk1nZUE07cxSZmVoNbD4Ua/O4=
@@ -3205,7 +3169,7 @@ path-parse@^1.0.6:
   resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.6.tgz#d62dbb5679405d72c4737ec58600e9ddcf06d24c"
   integrity sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==
 
-path-to-regexp@1.x, path-to-regexp@^1.2.0, path-to-regexp@^1.7.0:
+path-to-regexp@1.x:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-1.8.0.tgz#887b3ba9d84393e87a0a0b9f4cb756198b53548a"
   integrity sha512-n43JRhlUKUAlibEJhPeir1ncUID16QnEjNpwzNdO3Lm4ywrBpBZ5oLD0I6br9evr1Y9JTqwRtAh7JLoOzAQdVA==
@@ -4583,7 +4547,7 @@ wrappy@1:
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 
-ws@^7.0.1:
+ws@^7.2.3:
   version "7.2.3"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.2.3.tgz#a5411e1fb04d5ed0efee76d26d5c46d830c39b46"
   integrity sha512-HTDl9G9hbkNDk98naoR/cHDws7+EyYMOdL1BmjsZXRUjf7d+MficC4B7HLUPlSiho0vg+CWKrGIt/VJBd1xunQ==
