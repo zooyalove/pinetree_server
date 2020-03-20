@@ -1,6 +1,5 @@
-import { Schema, model, Model, Document } from "mongoose";
+import { Schema, model, Document } from "mongoose";
 import { MongoPrimary } from "../../lib/util";
-import Store, { IStore } from "../Store";
 
 const Item = new Schema({
   _id: MongoPrimary,
@@ -10,12 +9,6 @@ const Item = new Schema({
     type: String,
     required: true,
     index: true
-  },
-
-  // 매입처
-  store_id: {
-    type: String,
-    required: true
   },
 
   // 상품형태(S: 단일상품, C: 복합상품)
@@ -98,27 +91,17 @@ Item.methods.getSubItemCount = function(): number {
   return this.sub_items ? this.sub_items.count() : 0;
 };
 
-Item.methods.getStoreInfo = async function(): Promise<any> {
-  const store = await Store.findOne({ _id: this._id }, { _id: 0, name: 1, local: 1 });
-
-  if (store) {
-    return {
-      name: store.name,
-      local: store.local
-    };
-  }
-  return null;
-};
-
 Item.methods.getMargin = function(): number {
   return this.pricing.whole - this.pricing.cost;
 };
 
 export interface IItem extends IItemSchema {
-  store_id: IStore["_id"];
   getSubItemCount(): number;
-  getStoreInfo(): Promise<any>;
   getMargin(): number;
 }
+
+Item.pre<IItem>("save", function() {
+  this.updated_at = new Date();
+});
 
 export default model<IItem>("item", Item);

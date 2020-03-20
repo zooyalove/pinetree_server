@@ -35,7 +35,6 @@ export const getItemById: IMiddleware = async ctx => {
 export const addItem: IMiddleware = async ctx => {
   type RequestBody = {
     name: string;
-    store_id: string;
     item_type: string;
     sub_items?: string;
     cost: number;
