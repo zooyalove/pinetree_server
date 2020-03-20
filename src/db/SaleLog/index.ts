@@ -2,7 +2,7 @@ import { Schema, model, Document, Model } from "mongoose";
 import { MongoPrimary } from "../../lib/util";
 import Store, { IStore } from "../Store";
 
-const Sale = new Schema({
+const SaleLog = new Schema({
   _id: MongoPrimary,
 
   // 매출처 아이디
@@ -78,14 +78,16 @@ export interface ISale extends ISaleSchema {
 /**
  * 특정 거래처와 총 거래한 건수
  */
-Sale.statics.getTotalCountByStoreId = async function(storeId: string): Promise<number> {
+SaleLog.statics.getTotalCountByStoreId = async function(storeId: string): Promise<number> {
   return await this.find({ store_id: storeId }).count();
 };
 
 /**
  * 마지막 거래에 대한 정보
  */
-Sale.statics.getLastTransactionByStoreId = async function(storeId: string): Promise<string | null> {
+SaleLog.statics.getLastTransactionByStoreId = async function(
+  storeId: string
+): Promise<string | null> {
   const lastDate = await this.findOne({ store_id: storeId }, { _id: 0, selled_at: 1 }).sort({
     selled_at: -1
   });
@@ -99,4 +101,4 @@ export interface ISaleModel extends Model<ISale> {
   getLastTransactionByStoreId(storeId: string): Promise<string | null>;
 }
 
-export default model<ISale, ISaleModel>("sale", Sale);
+export default model<ISale, ISaleModel>("sale", SaleLog, "sale_logs");
