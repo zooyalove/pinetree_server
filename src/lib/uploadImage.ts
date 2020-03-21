@@ -101,7 +101,7 @@ class UploadImage {
     return this;
   }
 
-  createThumbnail(maxSize: number) {}
+  createThumbnail(maxSize: number = 100) {}
 
   save() {}
 }
