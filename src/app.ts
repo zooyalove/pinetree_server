@@ -10,6 +10,15 @@ const { PORT, SECRET_KEY } = process.env;
 import websockify from "./websockify";
 import api from "./api";
 import { isAuth } from "./middleware/auth";
+import { uploadDir } from "./lib/dir";
+
+const bodyParserConfig = {
+  multipart: true,
+  formLimit: "5mb",
+  formidable: {
+    uploadDir
+  }
+};
 
 const app = new Koa();
 const server = http.createServer(app.callback());
@@ -25,7 +34,7 @@ app.use(morgan("dev"));
 
 app.use(isAuth);
 
-app.use(bodyParser({ multipart: true }));
+app.use(bodyParser(bodyParserConfig));
 
 app.use(api.routes());
 

@@ -2,8 +2,7 @@ import { IMiddleware } from "koa-router";
 import path from "path";
 import fs from "fs";
 import UploadImage from "../../../lib/uploadImage";
-
-const imageFolder = "./upload/";
+import { uploadDir } from "../../../lib/dir";
 
 /**
  * 저장된 이미지 보기
@@ -12,12 +11,14 @@ const imageFolder = "./upload/";
 export const getImage: IMiddleware = ctx => {
   const filename = ctx.params.filename;
 
-  if (!fs.existsSync(path.join(imageFolder, filename))) {
+  if (!fs.existsSync(path.join(uploadDir, filename))) {
     ctx.body = {
       name: "NOT_EXISTS"
     };
     ctx.status = 400;
   }
+
+  ctx.type = "image/";
 };
 
 /**
