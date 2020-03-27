@@ -32,7 +32,7 @@ app.use(sessionStore);
 
 app.use(morgan("dev"));
 
-app.use(isAuth);
+// app.use(isAuth);
 
 app.use(bodyParser(bodyParserConfig));
 
