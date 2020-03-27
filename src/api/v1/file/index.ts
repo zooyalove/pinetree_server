@@ -3,7 +3,7 @@ import * as file from "./file.ctrl";
 
 const router = new Router();
 
-router.get("/:filename");
+router.get("/:filename", file.getImage);
 router.post("/", file.uploadImage);
 
 export default router;

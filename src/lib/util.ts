@@ -2,6 +2,7 @@ import nanoid from "nanoid";
 import { ParameterizedContext } from "koa";
 import createAuthMail from "./emailTemplate";
 import sendMailFactory from "sendmail";
+import crypto from "crypto";
 
 export const MongoPrimary = {
   type: String,
@@ -18,6 +19,15 @@ export const setCookieToken = (ctx: ParameterizedContext, token: string) => {
 export const generateToken = (): string => {
   const token = nanoid();
   return token;
+};
+
+export const generateFilename = (): string => {
+  const seed = crypto.randomBytes(20);
+  const hash = crypto
+    .createHash("sha1")
+    .update(seed)
+    .digest("hex");
+  return hash;
 };
 
 type RegisterEmailParams = {

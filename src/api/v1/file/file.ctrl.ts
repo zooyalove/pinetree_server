@@ -1,9 +1,9 @@
 import { IMiddleware } from "koa-router";
 import path from "path";
 import fs from "fs";
-import UploadImage from "../../../lib/uploadImage";
-import { uploadDir } from "../../../lib/dir";
 import sharp from "sharp";
+import { uploadDir } from "../../../lib/dir";
+import { generateFilename } from "../../../lib/util";
 
 /**
  * 저장된 이미지 보기
@@ -14,6 +14,8 @@ export const getImage: IMiddleware = ctx => {
 
   const imagePath = path.resolve(uploadDir, filename);
 
+  console.log(imagePath);
+
   if (!fs.existsSync(imagePath)) {
     ctx.body = {
       name: "NOT_EXISTS"
@@ -21,10 +23,10 @@ export const getImage: IMiddleware = ctx => {
     ctx.status = 400;
   }
 
-  ctx.type = "image/jpeg";
-
   const imageStream = fs.createReadStream(imagePath);
-  imageStream.pipe(ctx.body);
+
+  ctx.type = "image/jpeg";
+  ctx.body = imageStream;
 };
 
 /**
@@ -40,16 +42,37 @@ export const uploadImage: IMiddleware = async ctx => {
     return;
   }
 
-  console.log(ctx.request.files);
+  const originImage = ctx.request.body.origin_image;
+  if (originImage) {
+    fs.unlinkSync(path.join(uploadDir, originImage));
+  }
+
   const imageFile = ctx.request.files.image;
   const imagePath = imageFile.path;
-  console.log(imagePath);
 
-  const metadata = await sharp(imagePath).metadata();
-  console.log("Rotation : ", metadata.orientation);
-  await sharp(imagePath)
-    .resize({ width: 500, fit: "cover" })
-    .toFile("500_cover_" + imageFile.name);
+  try {
+    const metadata = await sharp(imagePath).metadata();
+    console.log("Rotation : ", metadata.orientation);
+
+    const filename = `${generateFilename()}.jpg`;
+    const filePath = path.join(uploadDir, filename);
+
+    await sharp(imagePath)
+      .resize({ width: 500 })
+      .jpeg({
+        quality: 100
+      })
+      .toFile(filePath);
+
+    fs.unlinkSync(imagePath);
+
+    ctx.body = {
+      filename
+    };
+  } catch (e) {
+    console.log(e);
+    ctx.throw(e);
+  }
 };
 
 /**
