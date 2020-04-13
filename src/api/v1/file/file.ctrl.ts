@@ -12,22 +12,22 @@ const prefix = "thumb";
  * GET /api/v1/file/:filename
  */
 export const getImage: IMiddleware = ctx => {
-  const filename = ctx.params.filename;
+  const filename: string = ctx.params.filename;
 
   const imagePath = path.resolve(uploadDir, filename);
 
-  console.log(imagePath);
+  // console.log(imagePath);
 
   if (!fs.existsSync(imagePath)) {
     ctx.body = {
-      name: "NOT_EXISTS"
+      name: "NOT_EXISTS",
     };
     ctx.status = 400;
   }
 
   const imageStream = fs.createReadStream(imagePath);
 
-  ctx.type = "image/jpeg";
+  ctx.type = filename.indexOf(".jpg") > -1 ? "image/jpeg" : "image/png";
   ctx.body = imageStream;
 };
 
@@ -38,13 +38,13 @@ export const getImage: IMiddleware = ctx => {
 export const uploadImage: IMiddleware = async ctx => {
   if (!ctx.request.files) {
     ctx.body = {
-      name: "REQUIRED_FILE"
+      name: "REQUIRED_FILE",
     };
     ctx.status = 400;
     return;
   }
 
-  const originImage = ctx.request.body.origin_image;
+  const originImage: string | undefined = ctx.request.body.origin_image;
   if (originImage) {
     fs.unlinkSync(path.join(uploadDir, originImage));
   }
@@ -54,25 +54,23 @@ export const uploadImage: IMiddleware = async ctx => {
 
   try {
     const metadata = await sharp(imagePath).metadata();
-    console.log("Rotation : ", metadata.orientation);
+    // console.log("Rotation : ", metadata.orientation);
 
     const signCode = generateFilename();
     const filename = `${signCode}.jpg`;
     const filePath = path.join(uploadDir, filename);
 
-    const image = await sharp(imagePath)
-      .jpeg({ quality: 100 })
-      .resize({ width: 500 });
+    const image = await sharp(imagePath).jpeg({ quality: 100 }).resize({ width: 500 });
 
     // image rotation
     if (metadata.orientation && metadata.orientation !== 1) {
       switch (metadata.orientation) {
         case 8: // 90 degree
-          image.rotate(90);
+          image.rotate(-90);
           break;
 
         case 6: // -90 degree
-          image.rotate(-90);
+          image.rotate(90);
           break;
 
         case 3: // 180 degree
@@ -80,29 +78,53 @@ export const uploadImage: IMiddleware = async ctx => {
       }
     }
 
-    const bufferImage = await image.toBuffer({ resolveWithObject: false });
-    const thumb = sharp(bufferImage)
-      .png()
-      .resize({ width: 100 });
+    await image.toFile(filePath);
+
+    const thumb = await sharp(filePath).png().resize({ width: 100 });
     const thumb_filename = `${prefix}_${filename}`.replace(".jpg", ".png");
 
-    image.toFile(filePath);
-    thumb.toFile(path.join(uploadDir, thumb_filename));
+    await thumb.toFile(path.join(uploadDir, thumb_filename));
 
     fs.unlinkSync(imagePath);
 
     ctx.body = {
       image: filename,
-      thumbnail: thumb_filename
+      thumbnail: thumb_filename,
     };
   } catch (e) {
     console.log(e);
-    ctx.throw(e);
+    ctx.throw(e, 400);
   }
 };
 
 /**
  * 저장된 이미지 삭제
- * DELETE /api/v1/file/:filename
+ * DELETE /api/v1/file/
+ * @param image
  */
-export const deleteImage: IMiddleware = ctx => {};
+export const deleteImage: IMiddleware = ctx => {
+  const image: string | undefined = ctx.request.body.image;
+
+  if (!image) {
+    ctx.body = {
+      name: "EMPTY_FILENAME",
+    };
+    ctx.status = 400;
+    return;
+  }
+
+  const imagePath = path.join(uploadDir, image);
+
+  if (!fs.existsSync(imagePath)) {
+    ctx.body = {
+      name: "NOT_EXISTS",
+    };
+    ctx.status = 400;
+    return;
+  }
+
+  fs.unlinkSync(imagePath);
+  ctx.body = {
+    name: "DELETE_SUCCESS",
+  };
+};
