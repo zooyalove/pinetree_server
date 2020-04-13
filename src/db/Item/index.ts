@@ -8,14 +8,26 @@ const Item = new Schema({
   name: {
     type: String,
     required: true,
-    index: true
+    index: true,
   },
 
   // 상품형태(S: 단일상품, C: 복합상품)
   item_type: {
     type: String,
     enum: ["S", "C"],
-    required: true
+    required: true,
+  },
+
+  // 가격 리스트 (원가(cost), 도매가(wholesale))
+  pricing: {
+    cost: {
+      type: Number,
+      required: true,
+    },
+    whole: {
+      type: Number,
+      required: true,
+    },
   },
 
   /**
@@ -27,18 +39,6 @@ const Item = new Schema({
    * }, ...]
    */
   sub_items: [Schema.Types.Mixed],
-
-  // 가격 리스트 (원가(cost), 도매가(wholesale))
-  pricing: {
-    cost: {
-      type: Number,
-      required: true
-    },
-    whole: {
-      type: Number,
-      required: true
-    }
-  },
 
   // 이미지 리스트
   images: [String],
@@ -54,16 +54,16 @@ const Item = new Schema({
 
   created_at: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
 
-  updated_at: Date
+  updated_at: Date,
 });
 
-enum ItemType {
-  Single = "S",
-  Complex = "C"
-}
+// enum ItemType {
+//   Single = "S",
+//   Complex = "C",
+// }
 
 export type SubItemType = {
   item_id: string;
@@ -73,12 +73,12 @@ export type SubItemType = {
 
 interface IItemSchema extends Document {
   name: string;
-  item_type: ItemType;
-  sub_items?: SubItemType[];
+  item_type: string;
   pricing: {
     cost: number;
     whole: number;
   };
+  sub_items?: SubItemType[];
   images?: string[];
   standard?: string;
   unit?: string;
@@ -87,11 +87,11 @@ interface IItemSchema extends Document {
   updated_at?: Date;
 }
 
-Item.methods.getSubItemCount = function(): number {
+Item.methods.getSubItemCount = function getSubItemCount(): number {
   return this.sub_items ? this.sub_items.count() : 0;
 };
 
-Item.methods.getMargin = function(): number {
+Item.methods.getMargin = function getMargin(): number {
   return this.pricing.whole - this.pricing.cost;
 };
 
@@ -100,7 +100,7 @@ export interface IItem extends IItemSchema {
   getMargin(): number;
 }
 
-Item.pre<IItem>("save", function() {
+Item.pre<IItem>("save", function () {
   this.updated_at = new Date();
 });
 
