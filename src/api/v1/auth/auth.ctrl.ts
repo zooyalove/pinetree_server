@@ -12,7 +12,7 @@ export const signIn: IMiddleware = async ctx => {
 
   if (token || ctx.state.user_id) {
     ctx.body = {
-      name: "ALREADY_SIGNIN"
+      name: "ALREADY_SIGNIN",
     };
     ctx.status = 400;
     return;
@@ -27,7 +27,7 @@ export const signIn: IMiddleware = async ctx => {
 
   if (!email || !password) {
     ctx.body = {
-      name: "INVALID_REQUEST"
+      name: "INVALID_REQUEST",
     };
     ctx.status = 400;
     return;
@@ -37,7 +37,7 @@ export const signIn: IMiddleware = async ctx => {
 
   if (!member) {
     ctx.body = {
-      name: "NOT_EXISTS_USERINFO"
+      name: "NOT_EXISTS_USERINFO",
     };
     ctx.status = 401;
     return;
@@ -45,7 +45,7 @@ export const signIn: IMiddleware = async ctx => {
 
   if (!member.validateHash(password)) {
     ctx.body = {
-      name: "NOT_EQUAL_PASSWORD"
+      name: "NOT_EQUAL_PASSWORD",
     };
     ctx.status = 401;
     return;
@@ -58,7 +58,9 @@ export const signIn: IMiddleware = async ctx => {
 
   ctx.body = {
     nickname: member.nickname,
-    verified: member.verified
+    verified: member.verified,
+    profile_image: member.profile_image,
+    is_admin: member.is_admin,
   };
 };
 
@@ -68,6 +70,9 @@ export const signIn: IMiddleware = async ctx => {
 export const signOut: IMiddleware = ctx => {
   ctx.state.user_id = null;
   ctx.cookies.set("token", "");
+  ctx.body = {
+    name: "LOGOUT_SUCCESS",
+  };
 };
 
 /** 회원가입 루틴
@@ -86,7 +91,7 @@ export const register: IMiddleware = async ctx => {
   const exists = await Member.findOne({ email });
   if (exists) {
     ctx.body = {
-      name: "ALREADY_EXISTS"
+      name: "ALREADY_EXISTS",
     };
     ctx.status = 400;
     return;
@@ -98,7 +103,7 @@ export const register: IMiddleware = async ctx => {
     email,
     password,
     nickname,
-    verify_code
+    verify_code,
   });
 
   await member.save();
@@ -108,7 +113,7 @@ export const register: IMiddleware = async ctx => {
   ctx.status = 201;
   ctx.body = {
     email,
-    nickname
+    nickname,
   };
 };
 
@@ -125,12 +130,12 @@ export const verifyCode: IMiddleware = async ctx => {
 
   const member = await Member.findOne({
     email: user_id,
-    verify_code
+    verify_code,
   });
 
   if (!member) {
     ctx.body = {
-      name: "NOT_EXISTS_USERINFO"
+      name: "NOT_EXISTS_USERINFO",
     };
     ctx.status = 401;
     return;
@@ -138,7 +143,7 @@ export const verifyCode: IMiddleware = async ctx => {
 
   if (member.verified) {
     ctx.body = {
-      name: "ALREADY_VERIFIED"
+      name: "ALREADY_VERIFIED",
     };
     ctx.status = 400;
     return;
@@ -148,7 +153,7 @@ export const verifyCode: IMiddleware = async ctx => {
   await member.save();
 
   ctx.body = {
-    name: "SUCCESS"
+    name: "SUCCESS",
   };
   ctx.status = 200;
 };
