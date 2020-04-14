@@ -16,6 +16,14 @@ export const modifyProfile: IMiddleware = async ctx => {
 
   const { id, email, password, nickname }: RequestBody = ctx.request.body;
 
+  if (ctx.state.user_id && ctx.state.user_id !== id) {
+    ctx.body = {
+      name: "NOT_EQUAL_USERINFO",
+    };
+    ctx.status = 401;
+    return;
+  }
+
   const member = await Member.findOne({ email, _id: id });
   if (!member) {
     ctx.body = {
