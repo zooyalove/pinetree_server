@@ -122,14 +122,14 @@ export const register: IMiddleware = async ctx => {
  */
 export const verifyCode: IMiddleware = async ctx => {
   type RequestBody = {
+    email: string;
     verify_code: string;
   };
 
-  const { user_id } = ctx.state;
-  const { verify_code }: RequestBody = ctx.request.body;
+  const { email, verify_code }: RequestBody = ctx.request.body;
 
   const member = await Member.findOne({
-    email: user_id,
+    email,
     verify_code,
   });
 
