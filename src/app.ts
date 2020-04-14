@@ -35,9 +35,9 @@ app.use(sessionStore);
 
 app.use(morgan("dev"));
 
-app.use(serve(`${__dirname}${servePath}`));
-
 // app.use(isAuth);
+
+app.use(serve(`${__dirname}${servePath}`));
 
 app.use(bodyParser(bodyParserConfig));
 
