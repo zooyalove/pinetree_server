@@ -1,5 +1,5 @@
-import Item from "../../../db/Item";
 import { IMiddleware } from "koa-router";
+import Item from "../../../db/Item";
 
 /**
  * 전체상품조회
@@ -16,8 +16,16 @@ export const getItemsAll: IMiddleware = async ctx => {
     return;
   }
 
+  const allItems = items.map(item => {
+    return {
+      id: item.id,
+      name: item.name,
+      image: item.images ? item.images[0] : "",
+    };
+  });
+
   ctx.body = {
-    items,
+    ...allItems,
   };
 };
 
@@ -37,8 +45,31 @@ export const getItemById: IMiddleware = async ctx => {
     return;
   }
 
+  let sub_items: object[] | null = null;
+
+  if (item.sub_items) {
+    sub_items = item.sub_items.map(async subItem => {
+      const sub_item = await Item.findById(subItem.item_id, { _id: 0, name: 1, images: 1 });
+
+      return {
+        item_name: sub_item!.name,
+        item_price: subItem.item_price,
+        item_cnt: subItem.item_cnt,
+        item_images: sub_item!.images,
+      };
+    });
+  }
+
   ctx.body = {
-    item,
+    name: item.name,
+    item_type: item.item_type,
+    cost: item.pricing.cost,
+    whole: item.pricing.whole,
+    images: item.images,
+    sub_items,
+    standard: item.standard,
+    unit: item.unit,
+    description: item.description,
   };
 };
 
