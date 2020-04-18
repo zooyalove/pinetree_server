@@ -8,14 +8,14 @@ const Store = new Schema({
   name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
 
   // 지역 카테고리
   localname: {
     type: String,
     enum: ["구미", "경주", "김천", "상주/문경", "안동/의성", "기타"],
-    required: true
+    required: true,
   },
 
   // 대표자명
@@ -28,7 +28,7 @@ const Store = new Schema({
   corp_type: {
     type: String,
     enum: ["C", "A"],
-    default: "A"
+    default: "A",
   },
 
   // 전잔금
@@ -36,10 +36,10 @@ const Store = new Schema({
 
   created_at: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
 
-  updated_at: Date
+  updated_at: Date,
 });
 
 export type RemainderType = {
@@ -54,13 +54,13 @@ interface IStoreSchema extends Document {
   telephone?: string;
   corp_type: string;
   remainder: RemainderType[];
-  created_at: Date;
+  created_at?: Date;
   updated_at?: Date;
 }
 
 export interface IStore extends IStoreSchema {}
 
-Store.pre<IStore>("save", function(next) {
+Store.pre<IStore>("save", function (next) {
   this.updated_at = new Date();
 });
 
