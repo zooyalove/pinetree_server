@@ -60,8 +60,8 @@ interface IMemberSchema extends Document {
   verify_code: string;
   profile_image?: string;
   is_admin: boolean;
-  created_at: Date;
-  updated_at: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 Member.methods.validateHash = function (password: string) {
@@ -77,9 +77,7 @@ Member.pre<IMember>("save", function (next) {
     this.password = bcryptjs.hashSync(this.password, salt);
   }
 
-  if (!this.updated_at) {
-    this.updated_at = new Date();
-  }
+  this.updated_at = new Date();
 });
 
 export default model<IMember>("member", Member);

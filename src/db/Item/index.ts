@@ -83,7 +83,7 @@ interface IItemSchema extends Document {
   standard?: string;
   unit?: string;
   description?: string;
-  created_at: Date;
+  created_at?: Date;
   updated_at?: Date;
 }
 
