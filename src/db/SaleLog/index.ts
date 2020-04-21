@@ -88,14 +88,16 @@ export interface ISale extends ISaleSchema {
 /**
  * 특정 거래처와 총 거래한 건수
  */
-SaleLog.statics.getTotalCountByStoreId = async function (storeId: string): Promise<number> {
+SaleLog.statics.getTotalCountByStoreId = async function getTotalCountByStoreId(
+  storeId: string
+): Promise<number> {
   return await this.find({ store_id: storeId }).count();
 };
 
 /**
  * 마지막 거래에 대한 정보
  */
-SaleLog.statics.getLastTransactionByStoreId = async function (
+SaleLog.statics.getLastTransactionByStoreId = async function getLastTransactionByStoreId(
   storeId: string
 ): Promise<string | null> {
   const lastDate = await this.findOne({ store_id: storeId }, { _id: 0, selled_at: 1 }).sort({
@@ -106,9 +108,50 @@ SaleLog.statics.getLastTransactionByStoreId = async function (
   return null;
 };
 
+SaleLog.statics.getRemainderPerLastYear = async function getRemainderPerYear(
+  storeId: string,
+  searchYear: number
+): Promise<number> {
+  const saleLogTotal = await this.aggregate([
+    {
+      $match: {
+        $and: [
+          { store_id: storeId },
+          {
+            selled_at: {
+              $gte: new Date(searchYear, 0, 1, 0, 0, 1),
+              $lt: new Date(searchYear + 1, 0, 1, 0, 0, 0),
+            },
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        totalTransMoney: {
+          $sum: [
+            "$discount",
+            "$extra_charge",
+            "$sales",
+            "$payment.CASH",
+            "$payment.ACCOUNT",
+            "$payment.CARD",
+          ],
+        },
+      },
+    },
+  ]);
+
+  const store = await Store.findById(storeId, { _id: 0, remainder: 1 });
+  const totalRemainder: number = store!.remainder + saleLogTotal.totalTransMoney;
+
+  return totalRemainder;
+};
+
 export interface ISaleModel extends Model<ISale> {
   getTotalCountByStoreId(storeId: string): Promise<number>;
   getLastTransactionByStoreId(storeId: string): Promise<string | null>;
+  getRemainderPerLastYear(storeId: string, searchYear: number): Promise<number>;
 }
 
 export default model<ISale, ISaleModel>("sale", SaleLog, "sale_logs");
