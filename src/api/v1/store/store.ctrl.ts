@@ -160,17 +160,9 @@ export const modifyStoreById: IMiddleware = async ctx => {
     ceo_name?: string;
     telephone?: string;
     corp_type: string;
-    remainder: string;
   };
 
-  const {
-    name,
-    localname,
-    ceo_name,
-    telephone,
-    corp_type,
-    remainder,
-  }: RequestBody = ctx.request.body;
+  const { name, localname, ceo_name, telephone, corp_type }: RequestBody = ctx.request.body;
 
   const store = await Store.findById(id);
 
@@ -187,28 +179,6 @@ export const modifyStoreById: IMiddleware = async ctx => {
   store.ceo_name = ceo_name;
   store.telephone = telephone;
   store.corp_type = corp_type;
-
-  // 잔금(현재 연도 이월금액이 입력이 되어 있는지 검색)
-  const currentYear = new Date().getFullYear();
-
-  let existsYear = false;
-  let remainIndex = -1;
-
-  store.remainder.forEach((remainObj, i) => {
-    if (remainObj.year && remainObj.year === currentYear) {
-      remainIndex = i;
-      existsYear = true;
-    }
-  });
-
-  if (!existsYear) {
-    store.remainder.push({
-      year: currentYear,
-      remain_money: parseInt(remainder, 10),
-    });
-  } else {
-    store.remainder[remainIndex].remain_money = parseInt(remainder, 10);
-  }
 
   await store.save();
 
