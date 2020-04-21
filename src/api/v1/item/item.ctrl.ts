@@ -45,19 +45,30 @@ export const getItemById: IMiddleware = async ctx => {
     return;
   }
 
-  let sub_items: object[] | null = null;
+  interface ISubItem {
+    item_name: string;
+    item_price: number;
+    item_cnt: number;
+    item_images: string[] | undefined;
+  }
+
+  let sub_items: ISubItem[] | null = null;
+
+  // let sub_items: object[] | null = null;
 
   if (item.sub_items) {
-    sub_items = item.sub_items.map(async subItem => {
-      const sub_item = await Item.findById(subItem.item_id, { _id: 0, name: 1, images: 1 });
+    sub_items = await Promise.all(
+      item.sub_items.map(async subItem => {
+        const sub_item = await Item.findById(subItem.item_id, { _id: 0, name: 1, images: 1 });
 
-      return {
-        item_name: sub_item!.name,
-        item_price: subItem.item_price,
-        item_cnt: subItem.item_cnt,
-        item_images: sub_item!.images,
-      };
-    });
+        return {
+          item_name: sub_item!.name,
+          item_price: subItem.item_price,
+          item_cnt: subItem.item_cnt,
+          item_images: sub_item!.images,
+        } as ISubItem;
+      })
+    );
   }
 
   ctx.body = {
